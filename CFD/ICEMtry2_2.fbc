@@ -1,0 +1,20 @@
+# family_boco file written by ICEM CFD by Stijn on Sun Oct 20 22:11:56 West-Europa (zomertijd) 2019
+## solver ANSYS Fluent
+"PNTS"
+"GEOM"
+"GEOM" "color" 16663900
+"EXTRA"
+"EXTRA" "color" 65535
+"BLADE"
+"BLADE" "color" 16663900
+"INLET"
+"INLET" "color" 16663900
+"OUTLET"
+"OUTLET" "color" 16663900
+"SIDES"
+"SIDES" "color" 16663900
+"TOP"
+"TOP" "color" 16663900
+"BOTTOM"
+"BOTTOM" "color" 16663900
+

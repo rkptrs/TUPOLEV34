@@ -1,3 +1,5 @@
+%Xtu and Xtl for root, kink and fuel tank end. This is a two colum
+%matrix with y and x values. 
 function [V_tank] = fuel_volume(Xtu_root, Xtu_kink, Xtu_fte, Xtl_root, Xtl_kink, Xtl_fte, y_fte, c_fte, y_section, c_section)
     %calculate root area
     root_indices_low = find(Xtu_root(:,2) > 0.15*c_section(1), 1, 'first');

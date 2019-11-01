@@ -1,3 +1,4 @@
+%input = design vector x_1 (vector), kink location y_kink and dihedral angle.
 function [x_section, y_section, z_section, c_section, twist_section, S, y_85, c_85] = geometry_function(x_1, y_kink, dihedral)
     %input for q3d, emwet, wing loading, fuel volume
     kink_percentage = y_kink/(x_1(3));

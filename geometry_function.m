@@ -1,4 +1,4 @@
-function [x_section, y_section, z_section, c_section, twist_section, S] = geometry_function(x_1, y_kink, dihedral)
+function [x_section, y_section, z_section, c_section, twist_section, S, y_85, c_85] = geometry_function(x_1, y_kink, dihedral)
     %input for q3d, emwet, wing loading, fuel volume
     kink_percentage = y_kink/(x_1(3));
     c_kink = x_1(1) - kink_percentage*(x_1(1) - x_1(2));
@@ -20,4 +20,7 @@ function [x_section, y_section, z_section, c_section, twist_section, S] = geomet
     S2 = (y_tip - y_kink)*(x_1(2) + c_kink)/2;
     S = 2*(S1 + S2);
     
+    %extra for fuel volume
+    y_85 = x_1(3)*0.85;
+    c_85 = x_1(1) - 0.85*(x_1(1) - x_1(2));
 end

@@ -1,0 +1,124 @@
+# Written by ICEM CFD 19.1, user rkptrs, Sat Nov 02 18:05:42 Centraal-Europa (standaardtijd) 2019
+
+begin family PNTS
+    begin solver "ANSYS Fluent"
+    end solver "ANSYS Fluent"
+end family PNTS
+
+begin family GEOM
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family GEOM
+
+begin family EXTRA
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 65535 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family EXTRA
+
+begin family BLADE
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family BLADE
+
+begin family INLET
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family INLET
+
+begin family OUTLET
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family OUTLET
+
+begin family SIDES
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family SIDES
+
+begin family TOP
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family TOP
+
+begin family BOTTOM
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family BOTTOM
+
+begin family MIRROR
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family MIRROR
+
+begin family MIRROR_0
+    begin solver "ANSYS Fluent"
+    end solver "ANSYS Fluent"
+end family MIRROR_0
+
+begin family SOLID
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 3403390 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family SOLID
+
+begin family DISS
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family DISS
+
+begin family BOUNDARY
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16663900 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family BOUNDARY
+
+begin family BOUNDARY_0
+    begin solver "ANSYS Fluent"
+    end solver "ANSYS Fluent"
+end family BOUNDARY_0

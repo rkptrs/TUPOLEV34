@@ -44,5 +44,11 @@ function [cl_distribution, cm_distribution, CLwing, CDwing] = Q3D_function(x_sec
     cl_distribution = Res.Wing.cl;  
     cm_distribution = Res.Wing.cm_c4; 
     CLwing = Res.CLwing;
-    CDwing = Res.CDiwing;
+    if AC.Visc == 0
+        CDwing = Res.CDiwing;  % if AC.Visc = 0, this value does not matter as it is used for EMWET
+    end
+    if AC.Visc == 1
+        CDwing = Res.CDwing;   % if AC.Visc = 1, this value does matter as it is used for Brequet
+    end
+        
 end 

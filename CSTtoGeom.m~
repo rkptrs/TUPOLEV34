@@ -47,8 +47,6 @@ for i = 1:length(xr)
     Cmr(i) = C(i)*(Su(i)+Sl(i))/2;    %calculate camber distribution !TE thickness ignored!
 end
 
-zeta_u = 0.0000;     %upper surface TE gap
-zeta_l = -0.0000;
 
 for i = 1:length(xt)
     
@@ -68,8 +66,8 @@ for i = 1:length(xt)
     end
     
     %calculate upper and lower surface ordinates at x(i)
-    Ytut(i) = C(i)*Su(i) + xt(i)*zeta_u;
-    Ytlt(i) = C(i)*Sl(i) + xt(i)*zeta_l;
+    Yut(i) = C(i)*Su(i) + xt(i)*zeta_u;
+    Ylt(i) = C(i)*Sl(i) + xt(i)*zeta_l;
     
     Thut(i) = C(i)*(Su(i)-Sl(i))/2;    %calculate thickness distribution !TE thickness ignored!
     Thlt(i) = C(i)*(Sl(i)-Su(i))/2;    %calculate thickness distribution !TE thickness ignored!
@@ -80,18 +78,18 @@ Ytlk = (Ytlr-Ytlt)*(1-kinkloc) + Ytlt;
 Ytu85 = (Ytur-Ytut)*(1-0.85) + Ytut;
 Ytl85 = (Ytlr-Ytlt)*(1-0.85) + Ytlt;
 
-Yustt = Ytut';
-Ylstt = Ytlt';
-Yusrt = Ytur';
-Ylsrt = Ytlr';
+Yustt = Yut';
+Ylstt = Ylt';
+Yusrt = Yur';
+Ylsrt = Ylr';
 Ytuks = Ytuk';
 Ytlks = Ytlk';
 Ytu85s = Ytu85';
 Ytl85s = Ytl85';
 %assemble airfoil coord matrix
 
-xk = xr;
-x85 = xr;
+xk = (xr-xt)*(1-kinkloc) + xt;
+x85 = (xr-xt)*(1-0.85) + xt;
 Xtur = [xr  Yusrt];
 Xtlr = [xr  Ylsrt];
 Xtut = [xt  Yustt];

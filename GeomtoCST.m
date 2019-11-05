@@ -10,8 +10,7 @@ options=optimset('Display','Iter');
 
 
 %perform optimization
-global data;
-Coor = data.coords;
+
 [x,fval,exitflag] = fmincon(@CST_objective,x0,[],[],[],[],lb,ub,[],options);
 M_break=M/2
 Au=x(1:M_break);

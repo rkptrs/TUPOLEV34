@@ -3,10 +3,10 @@ function[error] = CST_objective(x)
 %Determine upper and lower CST parameters from design-vector
  Au = x(1:length(x)/2);
  Al = x(length(x)/2+1:length(x));
- 
-global data;
-Coor = data.coords;
-
+fid= fopen('withcomb135.dat','r'); % Filename can be changed as required
+Coor = fscanf(fid,'%g %g',[2 Inf]); 
+fclose(fid);
+Coor = Coor';
 % Loop to find the transition between upper and lower coordinates
 % (When the Y coordinate of upper side = 0)
 lim = length(Coor); 

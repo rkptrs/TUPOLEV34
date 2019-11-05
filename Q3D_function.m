@@ -4,7 +4,7 @@
 % CL_design from DPC function
 % flight conditions V, rho, alt, Re, M
 
-function [cl_distribution, cm_distribution, CLwing, CDwing] = Q3D_function(x_section, y_section, z_section, c_section, twist_section, CST_root, CST_kink, CST_tip, Viscosity_coefficient, MaxIterIndex, CL_design, V, rho, alt, Re, M)
+function [cl_distribution, cm_distribution, Y_distribution, chord_distribution, CLwing, CDwing] = Q3D_function(x_section, y_section, z_section, c_section, twist_section, CST_root, CST_kink, CST_tip, Viscosity_coefficient, MaxIterIndex, CL_design, V, rho, alt, Re, M)
 
     % Wing planform geometry 
     %                x    y     z   chord(m)    twist angle (deg) 
@@ -43,6 +43,8 @@ function [cl_distribution, cm_distribution, CLwing, CDwing] = Q3D_function(x_sec
     
     cl_distribution = Res.Wing.cl;  
     cm_distribution = Res.Wing.cm_c4; 
+    Y_distribution = Res.Wing.Yst;
+    chord_distribution = Res.Wing.chord;
     CLwing = Res.CLwing;
     if AC.Visc == 0
         CDwing = Res.CDiwing;  % if AC.Visc = 0, this value does not matter as it is used for EMWET

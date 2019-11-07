@@ -19,16 +19,16 @@ data.coords = Coor;
 
 [x,fval,exitflag] = fmincon(@CST_objective,x0,[],[],[],[],lb,ub,[],[]);
 M_break=M/2;
-Aur=x(1:M_break);
-Alr=x(1+M_break:end);
+Au=x(1:M_break);
+Al=x(1+M_break:end);
 
 global data;
-data.coords = [Coor(:,1), Coor(:,2)*0.6];
+data.coords = [Coor(:,1), Coor(:,2)*0.7];
 
 [x,fval,exitflag] = fmincon(@CST_objective,x0,[],[],[],[],lb,ub,[],[]);
 M_break=M/2;
-Aut=x(1:M_break);
-Alt=x(1+M_break:end);
+Au=x(1:M_break);
+Al=x(1+M_break:end);
 
 end
 

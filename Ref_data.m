@@ -9,6 +9,7 @@ Incidence_tip = -1;
 y_kink = 5;
 dihedral = 6;
 W_TO_max = 46500*9.80665;
+W_ZFW = 41050*9.80665;
 MAC = 3.53;
 n_max = 2.5;
 V = 222.24;

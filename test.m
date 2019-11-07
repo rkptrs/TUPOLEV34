@@ -2,30 +2,14 @@ close all;
 clc;
 clear all;
 
-fid= fopen('withcomb135.dat','r'); % Filename can be changed as required
-Coor = fscanf(fid,'%g %g',[2 Inf]); 
-fclose(fid);
-Coor = Coor';
-global data;
-data.coords = Coor;
+[Aur,Alr,Aut,Alt] = GeomtoCST();
+x0 = [5.6,0.9,14,25,25,0,0,Aur',Alr',Aut',Alt']';
+lb = [0.5,0.1,5,0.5,0.5,-5,-5,0.5*Aur',0.5*Alr',0.5*Aut',0.5*Alt']';
+ub = [20,20,30,60,60,5,5,2*Aur',2*Alr',2*Aut',2*Alt']';
 
-[Aur,Alr] = GeomtoCST()
-Xr = Coor
-
-
-kinkloc = 0.4;
-global data;
-data.coords = [Coor(:,1), Coor(:,2)*0.7];
-
-[Aut,Alt] = GeomtoCST()
-Xt = Coor
-
-[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(Aur,Alr,Aut,Alt,Xr,Xt,kinkloc);
-
-hold on
-plot(Xtur(:,1),Xtur(:,2),'b');    %plot upper surface coords
-plot(Xtlr(:,1),Xtlr(:,2),'b');    %plot lower surface coords
-plot(Xtut(:,1),Xtut(:,2),'r');    %plot upper surface coords
-plot(Xtlt(:,1),Xtlt(:,2),'r'); 
-plot(Xtuk(:,1),Xtuk(:,2),'k');    %plot upper surface coords
-plot(Xtlk(:,1),Xtlk(:,2),'k'); 
+x0n = (x0-lb)./(ub-lb);
+lbn = 0.*lb;
+ubn = ub./ub;
+xinit = x0n.*(ub-lb)+lb;
+kinkloc = 0.5;
+[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(Aur,Alr,Aut,Alt,kinkloc);

@@ -6,13 +6,13 @@ x0 = 0*ones(M,1);     %initial value of design vector x(starting vector for sear
 lb = -1*ones(M,1);    %upper bound vector of x
 ub = 1*ones(M,1);     %lower bound vector of x
 
-options=optimset('Display','Iter');
+%options=optimset('Display','Iter');
 
 
 %perform optimization
 
-[x,fval,exitflag] = fmincon(@CST_objective,x0,[],[],[],[],lb,ub,[],options);
-M_break=M/2
+[x,fval,exitflag] = fmincon(@CST_objective,x0,[],[],[],[],lb,ub,[],[]);
+M_break=M/2;
 Au=x(1:M_break);
 Al=x(1+M_break:end);
 

@@ -5,10 +5,10 @@
 %coord, up surf thickness distribution, lw surf thickness distb, camber
 %distb] = input (up surf Bernstein parameters, lw surf BS params,
 %X-ordinates)
-function[Xtr,Xtt,Xtk,Xt85] = CSTtoGeom(Aur,Alr,Aut,Alt,Xr,Xt,kinkloc)
+function[Xtr,Xtt,Xtk,Xt85] = CSTtoGeom(Aur,Alr,Aut,Alt,kinkloc)
 
-xr = Xr(:,1);
-xt = Xt(:,1);
+xr = [0:0.02:1]
+xt = [0:0.02:1]
 N1 = 0.5;   %Class function N1
 N2 = 1;     %Class function N2
 

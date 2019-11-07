@@ -5,7 +5,7 @@
 %coord, up surf thickness distribution, lw surf thickness distb, camber
 %distb] = input (up surf Bernstein parameters, lw surf BS params,
 %X-ordinates)
-function[Xtr,Xtt,Xtk,Xt85] = CSTtoGeom(Aur,Alr,Aut,Alt,kinkloc)
+function[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(Aur,Alr,Aut,Alt,kinkloc)
 
 xr = [0:0.02:1]
 xt = [0:0.02:1]
@@ -101,24 +101,12 @@ Xtlk = [xk  Ytlks];
 Xtu85 = [x85  Ytu85s];
 Xtl85 = [x85  Ytl85s];
 
-for i=37:73
-    Xtur(i,2) = Xtlr(i,2);
-end
-for i=37:73
-    Xtut(i,2) = Xtlt(i,2);
-end
-for i=37:73
-    Xtuk(i,2) = Xtlk(i,2);
-end
-for i=37:73
-    Xtu85(i,2) = Xtl85(i,2);
-end
-Xtr = Xtur;
-Xtt = Xtut;
-Xtk = Xtuk;
-Xt85 = Xtu85;
-writetable(array2table(Xtr),'airfoilroot.dat','Delimiter',' ','WriteVariableNames',false);
-writetable(array2table(Xtt),'airfoiltip.dat','Delimiter',' ','WriteVariableNames',false);
+
+
+Xtlr(1,:) = [];
+Xtlt(1,:) = [];
+writetable(array2table([flip(Xtur,1);Xtlr]),'airfoilroot.dat','Delimiter',' ','WriteVariableNames',false);
+writetable(array2table([flip(Xtut,1);Xtlt]),'airfoiltip.dat','Delimiter',' ','WriteVariableNames',false);
 
 
     

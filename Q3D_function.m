@@ -18,7 +18,6 @@ function [cl_distribution, cm_distribution, Y_distribution, chord_distribution, 
     % Airfoil coefficients input matrix
     %                    | ->     upper curve coeff.                <-|   | ->       lower curve coeff.       <-| 
     AC.Wing.Airfoils   = [CST_root(1)    CST_root(2)    CST_root(3)    CST_root(4)    CST_root(5)  CST_root(6)   CST_root(7)   CST_root(8)   CST_root(9)    CST_root(10)    CST_root(11)   CST_root(12);
-                          CST_kink(1)    CST_kink(2)    CST_kink(3)    CST_kink(4)    CST_kink(5)  CST_kink(6)   CST_kink(7)   CST_kink(8)   CST_kink(9)    CST_kink(10)    CST_kink(11)   CST_kink(12);
                           CST_tip(1)    CST_tip(2)    CST_tip(3)    CST_tip(4)    CST_tip(5)  CST_tip(6)   CST_tip(7)   CST_tip(8)   CST_tip(9)    CST_tip(10)    CST_tip(11)   CST_tip(12)];
 
     percentage_kink = y_section(2)/y_section(3);

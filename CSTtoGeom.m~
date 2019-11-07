@@ -5,7 +5,7 @@
 %coord, up surf thickness distribution, lw surf thickness distb, camber
 %distb] = input (up surf Bernstein parameters, lw surf BS params,
 %X-ordinates)
-function[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(Aur,Alr,Aut,Alt,Xr,Xt,kinkloc)
+function[Xtr,Xtt,Xtk,Xt85] = CSTtoGeom(Aur,Alr,Aut,Alt,Xr,Xt,kinkloc)
 
 xr = Xr(:,1);
 xt = Xt(:,1);
@@ -47,6 +47,8 @@ for i = 1:length(xr)
     Cmr(i) = C(i)*(Su(i)+Sl(i))/2;    %calculate camber distribution !TE thickness ignored!
 end
 
+zeta_u = 0.0000;     %upper surface TE gap
+zeta_l = -0.0000;
 
 for i = 1:length(xt)
     
@@ -66,8 +68,8 @@ for i = 1:length(xt)
     end
     
     %calculate upper and lower surface ordinates at x(i)
-    Yut(i) = C(i)*Su(i) + xt(i)*zeta_u;
-    Ylt(i) = C(i)*Sl(i) + xt(i)*zeta_l;
+    Ytut(i) = C(i)*Su(i) + xt(i)*zeta_u;
+    Ytlt(i) = C(i)*Sl(i) + xt(i)*zeta_l;
     
     Thut(i) = C(i)*(Su(i)-Sl(i))/2;    %calculate thickness distribution !TE thickness ignored!
     Thlt(i) = C(i)*(Sl(i)-Su(i))/2;    %calculate thickness distribution !TE thickness ignored!
@@ -78,18 +80,18 @@ Ytlk = (Ytlr-Ytlt)*(1-kinkloc) + Ytlt;
 Ytu85 = (Ytur-Ytut)*(1-0.85) + Ytut;
 Ytl85 = (Ytlr-Ytlt)*(1-0.85) + Ytlt;
 
-Yustt = Yut';
-Ylstt = Ylt';
-Yusrt = Yur';
-Ylsrt = Ylr';
+Yustt = Ytut';
+Ylstt = Ytlt';
+Yusrt = Ytur';
+Ylsrt = Ytlr';
 Ytuks = Ytuk';
 Ytlks = Ytlk';
 Ytu85s = Ytu85';
 Ytl85s = Ytl85';
 %assemble airfoil coord matrix
 
-xk = (xr-xt)*(1-kinkloc) + xt;
-x85 = (xr-xt)*(1-0.85) + xt;
+xk = xr;
+x85 = xr;
 Xtur = [xr  Yusrt];
 Xtlr = [xr  Ylsrt];
 Xtut = [xt  Yustt];
@@ -98,4 +100,25 @@ Xtuk = [xk  Ytuks];
 Xtlk = [xk  Ytlks];
 Xtu85 = [x85  Ytu85s];
 Xtl85 = [x85  Ytl85s];
+
+for i=37:73
+    Xtur(i,2) = Xtlr(i,2);
+end
+for i=37:73
+    Xtut(i,2) = Xtlt(i,2);
+end
+for i=37:73
+    Xtuk(i,2) = Xtlk(i,2);
+end
+for i=37:73
+    Xtu85(i,2) = Xtl85(i,2);
+end
+Xtr = Xtur;
+Xtt = Xtut;
+Xtk = Xtuk;
+Xt85 = Xtu85;
+writematrix(Xtr,'airfoilroot.dat');
+writematrix(Xtt,'airfoiltip.dat');
+
+    
 

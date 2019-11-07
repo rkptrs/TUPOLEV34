@@ -1,5 +1,5 @@
 function [Aur,Alr,Aut,Alt] = GeomtoCST()
-M = 12  %Number of CST-coefficients in design-vector x
+M = 12;  %Number of CST-coefficients in design-vector x
 
 %Define optimization parameters
 x0 = 0*ones(M,1);     %initial value of design vector x(starting vector for search process)

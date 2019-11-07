@@ -36,10 +36,10 @@ fid = fopen('tu334.load', 'wt');
     end
 fclose(fid);
 
-EMWET tu334;
+EMWET tu334
 
-filetext = fileread('tu334.weight');
-W_str_kg = str2double(regexp(filetext, '(?<=Wing total weight[^0-9]*)[0-9]*\.?[0-9]+', 'match'));
+filetext = fileread('tu334.weight')
+W_str_kg = str2double(regexp(filetext, '(?<=Wing total weight[^0-9]*)[0-9]*\.?[0-9]+', 'match'))
 
 W_str = W_str_kg * 9.80665;    
     

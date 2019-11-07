@@ -20,8 +20,16 @@ x_1_ref = [s.C_root, s.C_tip, s.b/2, s.Lambda_1, s.Lambda_2, s.Incidence_root, s
 W_AW = s.W_TO_max - W_str_ref - W_fuel_ref;   %Newton
 C_D_AW = CLwing_ref/16 - CDwing_ref;
 D_AW = 0.5*s.rho*S_ref*s.V^2*C_D_AW;
-save('reffile.mat', 'W_AW', 'D_AW', 'W_str_ref', 'W_fuel_ref', '-append')
 x0 = [x_1_ref'; Aur_ref; Alr_ref; Aut_ref; Alt_ref];
+lb = [0.5,0.1,5,0.5,0.5,-5,-5, Aur_ref' - 0.5*abs(Aur_ref)',Alr_ref' - 0.5*abs(Alr_ref)',Aut_ref' - 0.5*abs(Aut_ref)',Alt_ref' - 0.5*abs(Alt_ref)']';
+ub = [20,20,30,60,60,5,5,Aur_ref' + 0.5*abs(Aur_ref)',Alr_ref' + 0.5*abs(Alr_ref)',Aut_ref' + 0.5*abs(Aut_ref)',Alt_ref' + 0.5*abs(Alt_ref)']';
 
-[x, fval] = fmincon(@(x) MDA(x), x0, [], [], [], [], x0*0.9, x0*1.1, @(x) constraints(x)); 
+save('reffile.mat', 'W_AW', 'D_AW', 'W_str_ref', 'W_fuel_ref', 'lb', 'ub', '-append')
 
+x0n = (x0-lb)./(ub-lb);
+lbn = 0.*lb;
+ubn = ub./ub;
+
+tic;
+[x, fval] = fmincon(@(x) MDA(x), x0n, [], [], [], [], lbn, ubn, @(x) constraints(x)); 
+toc;

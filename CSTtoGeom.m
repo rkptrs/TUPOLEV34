@@ -7,8 +7,8 @@
 %X-ordinates)
 function[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(Aur,Alr,Aut,Alt,kinkloc)
 
-xr = [0:0.02:1]
-xt = [0:0.02:1]
+xr = [0:0.02:1]';
+xt = [0:0.02:1]';
 N1 = 0.5;   %Class function N1
 N2 = 1;     %Class function N2
 

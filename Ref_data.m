@@ -19,4 +19,4 @@ Re = rho*V*3.53/(1.422*10^-5);
 speedofsound = 295;
 M = V/speedofsound;
 
-save('reffile.mat','C_root','C_tip', 'b', 'Lambda_1', 'Lambda_2', 'Incidence_root', 'Incidence_tip', 'y_kink', 'dihedral', 'W_TO_max', 'MAC', 'n_max', 'V', 'rho', 'alt', 'Re', 'speedofsound', 'M' )
+save('reffile.mat','C_root','C_tip', 'b', 'Lambda_1', 'Lambda_2', 'Incidence_root', 'Incidence_tip', 'y_kink', 'dihedral', 'W_TO_max', 'W_ZFW', 'MAC', 'n_max', 'V', 'rho', 'alt', 'Re', 'speedofsound', 'M' )

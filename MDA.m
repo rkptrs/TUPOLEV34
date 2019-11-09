@@ -30,7 +30,7 @@ diff_W_TO_max = abs(W_TO_list(1) - W_TO_list(2));
 iteration = iteration + 1
 end
 
-[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(x(8:13), x(14:19), x(20:25), x(26:31), s.y_kink/x(3));
+[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(x(8:13), x(14:19), x(20:25), x(26:31), s.y_kink/x(3),c_section,c_85);
 global data;
 data.y_85 = y_85;
 data.c_85 = c_85;

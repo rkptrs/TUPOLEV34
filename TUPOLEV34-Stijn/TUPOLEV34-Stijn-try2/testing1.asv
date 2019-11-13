@@ -1,0 +1,61 @@
+
+global data;
+%x = x0n.*(data.ub-data.lb)+data.lb;
+x(1:7)  = [2;  0.2;  10;  30;   4;   -5;    -5];%check the input of the loop
+
+% lb = x(1:7)  = [3;  0.2;  10;  0.5;   0.5;   -5;    -5];%check the input of the loop
+% ub = x(1:7)  = [20;  20;  30;  45;   45;   5;    5];%check the input of the loop
+x = data.lb;
+% 1.0000
+%     0.2000
+%     7.5000
+%     1.0000
+%    50.0000
+%     4.5957
+%    -5.0000
+
+x = [3.7800
+    3.1477
+   11.2000
+   39.0000
+   39.0000
+    0.1464
+   1.1780
+    0.1519
+    0.0742
+    0.3619
+    0.0908
+    0.2709
+    0.3670
+   -0.2324
+   -0.1678
+   -0.0483
+   -0.4894
+    0.0715
+    0.3154
+    0.0911
+    0.0648
+    0.2168
+    0.0725
+    0.2255
+    0.3089
+   -0.0879
+   -0.0639
+   -0.0281
+   -0.1863
+    0.0449
+    0.2636];
+
+W_fuel = data.W_fuel_mda;
+W_str = data.W_str_mda;
+[x_section, y_section, z_section, c_section, twist_section, S, y_85, c_85] = geometry_function(x(1:7), data.y_kink, data.dihedral);
+
+W_TO_max = data.W_TO_max_mda;
+
+[Xtur,Xtlr,Xtut,Xtlt,Xtuk,Xtlk,Xtu85,Xtl85] = CSTtoGeom(x(8:13), x(14:19), x(20:25), x(26:31), data.y_kink/x(3),c_section,c_85);
+
+[CL_design_max] = DPC_function(data.W_AW, W_fuel, W_str, S, data.n_max);
+[cl_distribution, cm_distribution, Y_distribution, chord_distribution, CLwing, CDwing] = Q3D_function(x_section, y_section, z_section, c_section, twist_section, x(8:19), x(20:31), 1, 1500, CL_design_max, data.V, data.rho, data.alt, data.Re, data.M);
+
+EMWET_function(x(1:7), cl_distribution, cm_distribution, Y_distribution, chord_distribution, W_TO_max, W_fuel, data.n_max, S, x_section, y_section, z_section, c_section, data.rho, data.V);
+EMWET TUPOLEVaircraft

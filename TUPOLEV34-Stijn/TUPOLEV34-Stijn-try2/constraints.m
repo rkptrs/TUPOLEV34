@@ -35,5 +35,6 @@ WS_original = 558.72;
 
 no_convergence_value = data.no_convergence_value;
 
-c = [(V_fuel - V_tank*f_tank)/data.c_volume_ref, (WS_new - WS_original)/data.c_wingloading_ref];
-ceq = [(no_convergence_value - 1)];
+c = [(V_fuel - V_tank*f_tank)/abs(data.c_volume_ref), (WS_new - WS_original)/abs(data.c_wingloading_ref)];
+%ceq = [(no_convergence_value - 1)];
+ceq = [];

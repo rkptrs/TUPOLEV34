@@ -2,8 +2,10 @@ function [W_TO_max_out] = MDA(x)
 
 global data;
 
+[c_for_list, ceq_for_list] = constraints(x);
+
 x = x.*(data.ub-data.lb)+data.lb;
-x(1:7)  %check the input of the loop
+%x(1:7)  %check the input of the loop
 
 W_fuel = data.W_fuel_mda;
 W_str = data.W_str_mda;
@@ -21,7 +23,7 @@ Re = data.rho*data.V*mac/(1.422*10^-5);
 
 no_convergence_value = 1;
 iteration_mda = 0;
-while diff_W_TO_max > 9.80665*0.1
+while diff_W_TO_max > 9.80665*0.5
 W_TO_list(1) = W_TO_max;
 [CL_design_max] = DPC_function(data.W_AW, W_fuel, W_str, S, data.n_max);
 [cl_distribution, cm_distribution, Y_distribution, chord_distribution, CLwing, CDwing] = Q3D_function(x_section, y_section, z_section, c_section, twist_section, x(8:19), x(20:31), 0, 150, CL_design_max, data.V, data.rho, data.alt, Re, data.M);
@@ -44,20 +46,17 @@ end
 W_TO_list(2) = W_TO_max;
 diff_W_TO_max = abs(W_TO_list(1) - W_TO_list(2));
 % W_TO_list(1) - W_TO_list(2)
-iteration_mda = iteration_mda + 1
+iteration_mda = iteration_mda + 1;
 if iteration_mda == 10
     diff_W_TO_max = 0;  %to end mda loop if it wont converge further
 end
 end
-
-W_TO_max_out = W_TO_max / data.W_TO_max_ref;
 
 
 %save new guess for next loop
 W_str_mda = W_str;
 W_fuel_mda = W_fuel;
 W_TO_max_mda = W_TO_max;
-% abs(sum(data.xold) - sum(x))*100000    %check to see if x changes
 xold = x;
 data.y_85 = y_85;
 data.c_85 = c_85;
@@ -79,4 +78,7 @@ data.W_fuel_mda = W_fuel_mda;
 data.W_TO_max_mda = W_TO_max_mda;
 data.xold = xold;
 data.no_convergence_value = no_convergence_value;
+data.clist = [data.clist; c_for_list];
 
+
+W_TO_max_out = W_TO_max / data.W_TO_max_ref;

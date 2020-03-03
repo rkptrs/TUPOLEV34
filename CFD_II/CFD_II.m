@@ -30,8 +30,8 @@ Delta = 1/N;            % uniform spacing to be used in the mapping to compute t
 
 % Determine a suitable time step and stopping criterion, tol
 
-dt = ;             % time step
-tol =;             % tol determines when steady state is reached and the program terminates
+dt = 0.01;             % time step
+tol = 0.01;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -123,7 +123,7 @@ end
 %create u_norm and remove parts of tE21
 u_norm_E = zeros(N^2, 4*N);
 extra = 0;
-index = [];
+
 for i = 1:N
     u_norm_E(:, i + extra) = tE21(:, LEFT(i));
     u_norm_E(:,i+1 + extra) = tE21(:, RIGHT(i));
@@ -150,6 +150,15 @@ u_norm = u_norm_E*U_norm;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Here you need to construct the incidence matrix H1t1
+H1t1 = diag(ones(2*N*(N+1),1));
+% for i = 1:N*(N+1)
+%     H1t1(i+floor((i-1)/(N)),i) = 1;
+%     H1t1(i+1+floor((i-1)/(N)),i) = 1;
+% end
+% for i = N*(N+1)+1:2*N*(N+1)
+%     H1t1(i-N*(N+1),i) = -1;
+%     H1t1(i-(N-1)*(N+1),i) = 1;
+% end  
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -162,6 +171,7 @@ u_norm = u_norm_E*U_norm;
 %
 %    Multiply H1t1 with u_norm to het Hu_norm
 %
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
@@ -172,6 +182,16 @@ u_norm = u_norm_E*U_norm;
 %
 %    Remove rows and colums in H1t1 and Hu_norm for prescribed values
 %
+  
+for i = 1:N
+    BOTTOM(i) = i;
+    LEFT(i) = N*(N+1) + 1+(i-1)*(N+1);
+    RIGHT(i) = LEFT(i) + N;
+    TOP(i) = BOTTOM(i) + N^2;
+end
+
+H1t1(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
+H1t1([LEFT, RIGHT, TOP, BOTTOM],:) = [];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up the incidence E^{2,1} between 1-cochain circulation and 2-cochain vorticity on
@@ -184,6 +204,12 @@ u_norm = u_norm_E*U_norm;
 %
 %    Set up the incidence matrix E21 on the dual grid
 %
+for i = 1:(N+1)^2
+    E21(i, i) = 1;
+    E21(i, i+N+1) = -1;
+    E21(i, (N+2)*(N+1)+i+floor((i-1)/(N+1))) = -1;
+    E21(i, (N+2)*(N+1)+i+floor((i-1)/(N+1))+1) = 1;
+end 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -202,6 +228,110 @@ u_norm = u_norm_E*U_norm;
 %    Remove prescribed values from the matrix (just as was done for tE21)
 %    and store the known values in a vector u_pres
 %
+% for i = 1:2*N+1
+%     if i < N+2
+%         
+%     else
+%         n = i- (N+1);
+%         
+%     end
+% end
+
+%create u_pres and remove parts of E21
+
+% extra = 0;
+% index = [];
+% for i = 1:2*N+1
+%     if i < N+2
+%         BOTTOM_dual(i) = i ;
+%         LEFT_dual(i) = (N+2)*(N+1) + (i-1)*(N+1)+i;
+%         RIGHT_dual(i) = LEFT_dual(i) + (N+1);
+%         TOP_dual(i) = BOTTOM_dual(i) + (N+1)^2;
+%         
+%         u_pres_E(:,3*(N+1)+ i + extra) = E21(:, LEFT_dual(i));
+%         u_pres_E(:,4*N+i + extra) = E21(:, RIGHT_dual(i));
+%         U_pres((N+1)+3*N+1+i + extra,1) = V_wall_left;
+%         U_pres((N+1)+3*N+2+i+extra,1) = V_wall_right;
+%     else 
+%         n = i- (N+1);
+%         BOTTOM_dual(i) = (N+1)*(N+2) + n +1;
+%         LEFT_dual(i) = (N+1)*n+1;
+%         RIGHT_dual(i) = LEFT_dual(i) + N;
+%         TOP_dual(i) = 2*(N+1)*(N+2)-(N+1)+n;
+%         
+%         u_pres_E(:, (N+1)*n+1 ) = E21(:, LEFT_dual(i));
+%         u_pres_E(:,(N+1)*n+1+N) = E21(:, RIGHT_dual(i));
+%         U_pres(3*N+i + extra,1) = V_wall_left;
+%         U_pres(4*N+i+extra,1) = V_wall_right;
+%         
+%     end
+%     extra = extra + 1;
+% end
+% u_pres_E(:, [1:2*N+1]) = E21(:, BOTTOM_dual);
+% u_pres_E(:, [2*(N+1):3*(N+1)]) = E21(:, TOP_dual);
+% U_pres([1:2*N+1],1) = U_wall_bot;
+% U_pres([(N+1)+2*N+1:(N+1)+3*N+1],1) = U_wall_top;
+% 
+% E21(:,[LEFT_dual, RIGHT_dual, TOP_dual, BOTTOM_dual]) = [];
+% u_pres = u_pres_E*U_pres;
+extra = 0;
+for i = 1:2*N+1
+    if i < N+2
+        BOTTOM_dual(i) = i;
+        LEFT_dual(i) = (N+2)*(N+1) + (i-1)*(N+1)+i;
+        RIGHT_dual(i) = LEFT_dual(i) + (N+1);
+        TOP_dual(i) = BOTTOM_dual(i) + (N+1)^2; 
+    else 
+        n = i- (N+1);
+        BOTTOM_dual(i) = (N+1)*(N+2) + n +1;
+        LEFT_dual(i) = (N+1)*n+1;
+        RIGHT_dual(i) = LEFT_dual(i) + N;
+        TOP_dual(i) = 2*(N+1)*(N+2)-(N+1)+n;    
+    end
+    
+end
+
+finding = [BOTTOM_dual;TOP_dual;LEFT_dual;RIGHT_dual];
+k = 1;
+for i = 1:2*(N+1)*(N+2)
+    if any(finding(:)==i)
+        [row,col] = find(finding==i);
+        if row == 1
+            u_pres_E(:,k) = E21(:, BOTTOM_dual(col));
+            if col < N+2
+                U_pres(k,1) = U_wall_bot;
+            else
+                U_pres(k,1) = V_wall_bot;
+            end
+        elseif row == 2
+            u_pres_E(:,k) = E21(:, TOP_dual(col));
+            if col < N+2
+                U_pres(k,1) = U_wall_top;
+            else
+                U_pres(k,1) = V_wall_top;
+            end
+        elseif row == 3
+            u_pres_E(:,k) = E21(:, LEFT_dual(col)); 
+            if col < N+2
+                U_pres(k,1) = V_wall_left;
+            else
+                U_pres(k,1) = U_wall_left;
+            end
+        elseif row == 4
+            u_pres_E(:,k) = E21(:, RIGHT_dual(col));
+            if col < N+2
+                U_pres(k,1) = V_wall_right;
+            else
+                U_pres(k,1) = U_wall_right;
+            end
+        end
+        k = k+1;
+    end
+    
+end
+
+E21(:,[LEFT_dual, RIGHT_dual, TOP_dual, BOTTOM_dual]) = [];
+u_pres = u_pres_E*U_pres;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
@@ -216,6 +346,7 @@ u_norm = u_norm_E*U_norm;
 %    grid to point values on the primal grid assuming that the physical
 %    quantity is constant over the dual surfaces.
 %
+Ht02 = diag(ones((N+1)^2,1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up the Hodge matrix which maps inner-oriented 1-cochains to
@@ -228,6 +359,7 @@ u_norm = u_norm_E*U_norm;
 %    Set up the Hodge matrix which converts integrated values along dual
 %    edge to integral values over primal edges
 %
+Ht11 = diag(ones(12,1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 %

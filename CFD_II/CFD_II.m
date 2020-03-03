@@ -96,7 +96,7 @@ for i = 1:N^2
     tE21(i, (N+1)*N+i) = -1;
     tE21(i, (N+1)*N+i+N) = 1;
 end 
-tE21 = sparse(tE21);
+%tE21 = sparse(tE21);
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -105,11 +105,39 @@ tE21 = sparse(tE21);
 %  Multiplication by h components is done in order to obtain integral flux
 %  values 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Here you need to modify the incidence matrix tE21 to include the
 %    boundary conditions and store the boundary terms un u_norm (see
 %    assignment
+%Making indices where the boundary conditions need to be applied
+for i = 1:N
+    LEFT(i) = 1 + (i-1)*(N+1);
+    RIGHT(i) = LEFT(i) + N;
+    BOTTOM(i) = N*(N+1) + i;
+    TOP(i) = BOTTOM(i) + N^2;
+end
+
+%create u_norm and remove parts of tE21
+u_norm_E = zeros(N^2, 4*N);
+extra = 0;
+index = [];
+for i = 1:N
+    u_norm_E(:, i + extra) = tE21(:, LEFT(i));
+    u_norm_E(:,i+1 + extra) = tE21(:, RIGHT(i));
+    U_norm(i + extra,1) = U_wall_left;
+    U_norm(i+1+extra,1) = U_wall_right;
+    extra = extra + 1;
+end
+u_norm_E(:, [2*N+1:3*N]) = tE21(:, BOTTOM);
+u_norm_E(:, [3*N+1:4*N]) = tE21(:, TOP);
+U_norm([2*N+1:3*N],1) = V_wall_bot;
+U_norm([3*N+1:4*N],1) = V_wall_top;
+
+tE21(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
+u_norm = u_norm_E*U_norm;
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

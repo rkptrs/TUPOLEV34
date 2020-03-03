@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-N = 3;
+N = 2;
 tE21 = zeros(N^2, 2*N*(N+1));
 for i = 1:N^2
     tE21(i, i+floor((i-1)/N)) = -1;
@@ -10,7 +10,9 @@ for i = 1:N^2
     tE21(i, (N+1)*N+i) = -1;
     tE21(i, (N+1)*N+i+N) = 1;
 end 
-tE21
+tE21;
+transpose(tE21)
+size(tE21)
 sE21 = sparse(tE21);
 
 for i = 1:N
@@ -49,15 +51,19 @@ tE21(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
 size(transpose(tE21))
 u_norm = u_norm_E*U_norm;
 
-E01 = zeros((N-1)*(2*N), N^2);
+E10 = zeros((N-1)*(2*N), N^2);
 for i = 1:(N-1)*N
-    E01(i, i+floor((i-1)/(N-1))) = -1;
-    E01(i, i+1+floor((i-1)/(N-1))) = 1;
+    E10(i, i+floor((i-1)/(N-1))) = -1;
+    E10(i, i+1+floor((i-1)/(N-1))) = 1;
 end 
 for i = (N-1)*N+1:(N-1)*2*N
-    E01(i, i-2*N) = -1;
-    E01(i, i-N) = 1;
+    E10(i, i-(N-1)*N) = -1;
+    E10(i, i-(N-1)*N+N) = 1;
 end
-transpose(tE21)+E01
+
+% transpose(tE21)+E10
+
+
+
 
 

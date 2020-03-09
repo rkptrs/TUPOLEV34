@@ -24,14 +24,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 10;                 % Number of volumes in the x- and y-direction
+N = 2;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
-dt = 0.0001;             % time step
-tol = 0.0001;             % tol determines when steady state is reached and the program terminates
+%dt = ..;             % time step
+tol = 0.001;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -70,6 +70,9 @@ x = [0 x 1];
 
 h = zeros(N+1,1);
 h = x(2:N+2) - x(1:N+1);
+
+
+dt = min([min(h), 0.5*Re*min(h)^2]);
 
 %
 %   Initial condition u=v=0
@@ -335,6 +338,7 @@ end
 
 E21(:,[LEFT_dual, RIGHT_dual, TOP_dual, BOTTOM_dual]) = [];
 u_pres = u_pres_E*U_pres;
+full(u_pres)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
@@ -405,7 +409,8 @@ A = -tE21*Ht11*tE21';
 
 VLaplace = H1t1*E21'*Ht02*E21;
 DIV = tE21*Ht11;
-
+size(u)
+sum(u)
 while diff > tol
         
     %Vector chi is obtained. It corresponds with the point-wise vorticity

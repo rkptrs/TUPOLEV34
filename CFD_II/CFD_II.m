@@ -359,7 +359,7 @@ Ht02 = diag(ones((N+1)^2,1));
 %    Set up the Hodge matrix which converts integrated values along dual
 %    edge to integral values over primal edges
 %
-Ht11 = diag(ones(12,1));
+Ht11 = diag(ones((2*N - 2)*N,1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 %

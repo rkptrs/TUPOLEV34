@@ -24,14 +24,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 2;                 % Number of volumes in the x- and y-direction
+N = 32;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
 %dt = ..;             % time step
-tol = 0.001;             % tol determines when steady state is reached and the program terminates
+tol = 0.00001;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -130,14 +130,14 @@ extra = 0;
 for i = 1:N
     u_norm_E(:, i + extra) = tE21(:, LEFT(i));
     u_norm_E(:,i+1 + extra) = tE21(:, RIGHT(i));
-    U_norm(i + extra,1) = U_wall_left;
-    U_norm(i+1+extra,1) = U_wall_right;
+    U_norm(i + extra,1) = U_wall_left*th(i);
+    U_norm(i+1+extra,1) = U_wall_right*th(i);
     extra = extra + 1;
 end
 u_norm_E(:, [2*N+1:3*N]) = tE21(:, BOTTOM);
 u_norm_E(:, [3*N+1:4*N]) = tE21(:, TOP);
-U_norm([2*N+1:3*N],1) = V_wall_bot;
-U_norm([3*N+1:4*N],1) = V_wall_top;
+U_norm([2*N+1:3*N],1) = V_wall_bot*th(i);
+U_norm([3*N+1:4*N],1) = V_wall_top*th(i);
 
 tE21(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
 u_norm = u_norm_E*U_norm;
@@ -299,37 +299,49 @@ U_pres = sparse([]);
 
 finding = [BOTTOM_dual;TOP_dual;LEFT_dual;RIGHT_dual];
 k = 1;
+b = 1;
+t = 1;
+l = 1;
+r = 1;
 for i = 1:2*(N+1)*(N+2)
     if any(finding(:)==i)
         [row,col] = find(finding==i);
         if row == 1
             u_pres_E(:,k) = E21(:, BOTTOM_dual(col));
             if col < N+2
-                U_pres(k,1) = U_wall_bot;
+                U_pres(k,1) = U_wall_bot*h(b);
+                b = b+1;
             else
-                U_pres(k,1) = V_wall_bot;
+                U_pres(k,1) = V_wall_bot*h(1);
             end
+            
         elseif row == 2
             u_pres_E(:,k) = E21(:, TOP_dual(col));
             if col < N+2
-                U_pres(k,1) = U_wall_top;
+                U_pres(k,1) = U_wall_top*h(t);
+                t = t+1;
             else
-                U_pres(k,1) = V_wall_top;
+                U_pres(k,1) = V_wall_top*h(1);
             end
+            
         elseif row == 3
             u_pres_E(:,k) = E21(:, LEFT_dual(col)); 
             if col < N+2
-                U_pres(k,1) = V_wall_left;
+                U_pres(k,1) = V_wall_left*h(l);
+                l = l+1;
             else
-                U_pres(k,1) = U_wall_left;
+                U_pres(k,1) = U_wall_left*h(1);
             end
+            
         elseif row == 4
             u_pres_E(:,k) = E21(:, RIGHT_dual(col));
             if col < N+2
-                U_pres(k,1) = V_wall_right;
+                U_pres(k,1) = V_wall_right*h(r);
+                r = r+1;
             else
-                U_pres(k,1) = U_wall_right;
+                U_pres(k,1) = U_wall_right*h(1);
             end
+            
         end
         k = k+1;
     end
@@ -393,7 +405,7 @@ u_pres = H1t1*E21'*Ht02*u_pres; %U_pres to inner oriented 1 forms
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-diff = 1;
+diff = 0.01;
 iter = 1;
 
 

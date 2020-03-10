@@ -2,6 +2,8 @@ clear all
 close all
 clc
 
+tic;
+
 % This syetm that you need to solve will be singular. Matlab gives you a
 % warning at each time step. To switch of this warning, remove the comment
 % in the next line
@@ -24,14 +26,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 32;                 % Number of volumes in the x- and y-direction
+N = 16;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
 %dt = ..;             % time step
-tol = 0.00001;             % tol determines when steady state is reached and the program terminates
+tol = 1e-10;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -350,7 +352,7 @@ end
 
 E21(:,[LEFT_dual, RIGHT_dual, TOP_dual, BOTTOM_dual]) = [];
 u_pres = u_pres_E*U_pres;
-full(u_pres)
+% full(u_pres)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
@@ -416,13 +418,15 @@ A = -tE21*Ht11*tE21';
 % Perform an LU-decomposition for the pressure matrix A
 
 [L,U] = lu(A);
+L = sparse(L);
+U = sparse(U);
 
 % Abbreviation for some matrix products which are constant in the time loop
 
 VLaplace = H1t1*E21'*Ht02*E21;
 DIV = tE21*Ht11;
-size(u)
-sum(u)
+% size(u)
+% sum(u)
 while diff > tol
         
     %Vector chi is obtained. It corresponds with the point-wise vorticity
@@ -496,4 +500,14 @@ while diff > tol
     end
     iter = iter + 1;
 end
+
+toc;
+
+% pressurelevellist = [-0.002, 0.0, 0.02, 0.05, 0.07, 0.09, 0.11, 0.12, 0.17, 0.3];
+for i = 1:N
+    for j = 1:N
+        Pressure(i, j) = p((i-1)*N + j); 
+    end
+end
+contour(x(2:N+1), x(2:N+1), Pressure)
 

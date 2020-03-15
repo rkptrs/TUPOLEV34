@@ -26,14 +26,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 16;                 % Number of volumes in the x- and y-direction
+N = 3;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
 %dt = ..;             % time step
-tol = 1e-10;             % tol determines when steady state is reached and the program terminates
+tol = 1e-5;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -138,8 +138,8 @@ for i = 1:N
 end
 u_norm_E(:, [2*N+1:3*N]) = tE21(:, BOTTOM);
 u_norm_E(:, [3*N+1:4*N]) = tE21(:, TOP);
-U_norm([2*N+1:3*N],1) = V_wall_bot*th(i);
-U_norm([3*N+1:4*N],1) = V_wall_top*th(i);
+U_norm([2*N+1:3*N],1) = V_wall_bot.*th(1:N);
+U_norm([3*N+1:4*N],1) = V_wall_top.*th(1:N);
 
 tE21(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
 u_norm = u_norm_E*U_norm;
@@ -407,7 +407,7 @@ u_pres = H1t1*E21'*Ht02*u_pres; %U_pres to inner oriented 1 forms
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-diff = 0.01;
+diff = 1;
 iter = 1;
 
 
@@ -417,7 +417,7 @@ A = -tE21*Ht11*tE21';
 
 % Perform an LU-decomposition for the pressure matrix A
 
-[L,U] = lu(A);
+[L,U] = lu(full(A));
 L = sparse(L);
 U = sparse(U);
 
@@ -425,8 +425,8 @@ U = sparse(U);
 
 VLaplace = H1t1*E21'*Ht02*E21;
 DIV = tE21*Ht11;
-% size(u)
-% sum(u)
+
+
 while diff > tol
         
     %Vector chi is obtained. It corresponds with the point-wise vorticity
@@ -493,7 +493,7 @@ while diff > tol
     
     if mod(iter,1000) == 0
     
-        maxdiv = max(DIV*u + u_norm) 
+        maxdiv = max(DIV*u + u_norm); 
         
         diff = max(abs(u-uold))/dt
         

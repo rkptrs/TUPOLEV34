@@ -2,8 +2,6 @@ clear all
 close all
 clc
 
-tic;
-
 % This syetm that you need to solve will be singular. Matlab gives you a
 % warning at each time step. To switch of this warning, remove the comment
 % in the next line
@@ -32,7 +30,7 @@ Delta = 1/N;            % uniform spacing to be used in the mapping to compute t
 
 % Determine a suitable time step and stopping criterion, tol
 
-%dt = ..;             % time step
+%dt = 0.01;             % time step
 tol = 1e-10;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
@@ -73,8 +71,8 @@ x = [0 x 1];
 h = zeros(N+1,1);
 h = x(2:N+2) - x(1:N+1);
 
-
 dt = min([min(h), 0.5*Re*min(h)^2]);
+
 
 %
 %   Initial condition u=v=0
@@ -94,7 +92,7 @@ u = zeros(2*N*(N-1),1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-tE21 = sparse([]);
+tE21 = zeros(N^2, 2*N*(N+1));
 for i = 1:N^2
     tE21(i, i+floor((i-1)/N)) = -1;
     tE21(i, i+1+floor((i-1)/N)) = 1;
@@ -126,20 +124,20 @@ for i = 1:N
 end
 
 %create u_norm and remove parts of tE21
-u_norm_E = sparse([]);
-U_norm = sparse([]);
+u_norm_E = zeros(N^2, 4*N);
 extra = 0;
+
 for i = 1:N
     u_norm_E(:, i + extra) = tE21(:, LEFT(i));
     u_norm_E(:,i+1 + extra) = tE21(:, RIGHT(i));
-    U_norm(i + extra,1) = U_wall_left*th(i);
-    U_norm(i+1+extra,1) = U_wall_right*th(i);
+    U_norm(i + extra,1) = U_wall_left;
+    U_norm(i+1+extra,1) = U_wall_right;
     extra = extra + 1;
 end
 u_norm_E(:, [2*N+1:3*N]) = tE21(:, BOTTOM);
 u_norm_E(:, [3*N+1:4*N]) = tE21(:, TOP);
-U_norm([2*N+1:3*N],1) = V_wall_bot.*th(1:N);
-U_norm([3*N+1:4*N],1) = V_wall_top.*th(1:N);
+U_norm([2*N+1:3*N],1) = V_wall_bot;
+U_norm([3*N+1:4*N],1) = V_wall_top;
 
 tE21(:,[LEFT, RIGHT, TOP, BOTTOM]) = [];
 u_norm = u_norm_E*U_norm;
@@ -155,7 +153,7 @@ u_norm = u_norm_E*U_norm;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Here you need to construct the incidence matrix H1t1
-H1t1 = spdiags(ones(2*N*(N+1),1),0, 2*N*(N+1),2*N*(N+1));
+H1t1 = diag(ones(2*N*(N+1),1));
 % for i = 1:N*(N+1)
 %     H1t1(i+floor((i-1)/(N)),i) = 1;
 %     H1t1(i+1+floor((i-1)/(N)),i) = 1;
@@ -209,7 +207,6 @@ H1t1([LEFT, RIGHT, TOP, BOTTOM],:) = [];
 %
 %    Set up the incidence matrix E21 on the dual grid
 %
-E21 = sparse([]);
 for i = 1:(N+1)^2
     E21(i, i) = 1;
     E21(i, i+N+1) = -1;
@@ -352,7 +349,6 @@ end
 
 E21(:,[LEFT_dual, RIGHT_dual, TOP_dual, BOTTOM_dual]) = [];
 u_pres = u_pres_E*U_pres;
-% full(u_pres)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
@@ -367,7 +363,7 @@ u_pres = u_pres_E*U_pres;
 %    grid to point values on the primal grid assuming that the physical
 %    quantity is constant over the dual surfaces.
 %
-Ht02 = spdiags(ones((N+1)^2,1),0, (N+1)^2,(N+1)^2);
+Ht02 = diag(ones((N+1)^2,1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up the Hodge matrix which maps inner-oriented 1-cochains to
@@ -380,7 +376,7 @@ Ht02 = spdiags(ones((N+1)^2,1),0, (N+1)^2,(N+1)^2);
 %    Set up the Hodge matrix which converts integrated values along dual
 %    edge to integral values over primal edges
 %
-Ht11 = spdiags(ones((2*N-2)*N,1),0, (2*N-2)*N,(2*N-2)*N);
+Ht11 = diag(ones((2*N - 2)*N,1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 %
@@ -417,15 +413,12 @@ A = -tE21*Ht11*tE21';
 
 % Perform an LU-decomposition for the pressure matrix A
 
-[L,U] = lu(full(A));
-L = sparse(L);
-U = sparse(U);
+[L,U] = lu(A);
 
 % Abbreviation for some matrix products which are constant in the time loop
 
 VLaplace = H1t1*E21'*Ht02*E21;
 DIV = tE21*Ht11;
-
 
 while diff > tol
         
@@ -493,7 +486,7 @@ while diff > tol
     
     if mod(iter,1000) == 0
     
-        maxdiv = max(DIV*u + u_norm); 
+        maxdiv = max(DIV*u + u_norm) ;
         
         diff = max(abs(u-uold))/dt
         
@@ -501,13 +494,9 @@ while diff > tol
     iter = iter + 1;
 end
 
-toc;
-
-% pressurelevellist = [-0.002, 0.0, 0.02, 0.05, 0.07, 0.09, 0.11, 0.12, 0.17, 0.3];
 for i = 1:N
     for j = 1:N
         Pressure(i, j) = p((i-1)*N + j); 
     end
 end
 contour(x(2:N+1), x(2:N+1), Pressure)
-

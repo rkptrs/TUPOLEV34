@@ -2,6 +2,7 @@ clear all
 close all
 clc
 
+tic;
 % This syetm that you need to solve will be singular. Matlab gives you a
 % warning at each time step. To switch of this warning, remove the comment
 % in the next line
@@ -24,14 +25,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 6;                 % Number of volumes in the x- and y-direction
+N = 2;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
 %dt = 0.01;             % time step
-tol = 1e-10;             % tol determines when steady state is reached and the program terminates
+tol = 1e-5;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -493,6 +494,8 @@ while diff > tol
     end
     iter = iter + 1;
 end
+
+toc;
 
 for i = 1:N
     for j = 1:N

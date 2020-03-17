@@ -26,14 +26,14 @@ warning off
 %
 
 Re = 1000;              % Reynolds number
-N = 6;                 % Number of volumes in the x- and y-direction
+N = 3;                 % Number of volumes in the x- and y-direction
 Delta = 1/N;            % uniform spacing to be used in the mapping to compute tx
 
 
 % Determine a suitable time step and stopping criterion, tol
 
 %dt = ..;             % time step
-tol = 1e-10;             % tol determines when steady state is reached and the program terminates
+tol = 1e-5;             % tol determines when steady state is reached and the program terminates
 
 % wall velocities
 U_wall_top = -1;
@@ -155,7 +155,20 @@ u_norm = u_norm_E*U_norm;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Here you need to construct the incidence matrix H1t1
+h1t1_vector = sparse([]);
+for j = 1:N
+    for i = 1:N+1
+        h1t1_vector = [h1t1_vector; h(i)];
+    end
+end
+for j = 1:N+1
+    for i = 1:N
+        h1t1_vector = [h1t1_vector; h(j)];
+    end
+end
 H1t1 = spdiags(ones(2*N*(N+1),1),0, 2*N*(N+1),2*N*(N+1));
+% H1t1 = spdiags(h1t1_vector,0, 2*N*(N+1),2*N*(N+1));
+
 % for i = 1:N*(N+1)
 %     H1t1(i+floor((i-1)/(N)),i) = 1;
 %     H1t1(i+1+floor((i-1)/(N)),i) = 1;
@@ -504,10 +517,12 @@ end
 toc;
 
 % pressurelevellist = [-0.002, 0.0, 0.02, 0.05, 0.07, 0.09, 0.11, 0.12, 0.17, 0.3];
-for i = 1:N
-    for j = 1:N
-        Pressure(i, j) = p((i-1)*N + j); 
-    end
+pres = reshape(p,[N,N]);
+
+for j = 2:N
+    y(1) = th(1)/2;
+    y(j) = th(j)/2 + th(j-1)/2 + y(j-1);
 end
-contour(x(2:N+1), x(2:N+1), Pressure)
+[X,Y] = meshgrid(y,y);
+contour(X,Y,pres,'ShowText','on')
 

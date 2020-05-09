@@ -11,7 +11,7 @@ omega_r = 221.2848;
 rho = 1.225;
 CD_S = 3.0;
 solidity = 0.092;
-cl_alpha = 0.115;
+cl_alpha = 0.115 * 180 / pi;
 
 
 
@@ -52,8 +52,8 @@ for i = 1:length(V)
     B = [(-2 * mu(i)^2 * D_fus(i)/W - 2* mu(i) * lambda_i(i));...
         (4 / solidity * CT(i) / cl_alpha + mu(i) * D_fus(i) / W + lambda_i(i))];
     C = A\B;
-    theta_c_list = [theta_c_list C(1)];
-    theta_0_list = [theta_0_list C(2)];
+    theta_c_list = [theta_c_list C(1)*180/pi];
+    theta_0_list = [theta_0_list C(2)*180/pi];
 end
 
 %% Plotting

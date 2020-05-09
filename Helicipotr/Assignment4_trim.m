@@ -1,4 +1,6 @@
-
+clear all;
+clc;
+close all;
 
 %% Helicopter parameters
 
@@ -33,7 +35,7 @@ lambda_i_list = [];
 for i = 1:length(V)
     for j = 1:length(lambda_i)
         CT_glauert = 2 * lambda_i(j) * sqrt((mu(i) * cos(D_fus(i)/W))^2 + (mu(i) * sin(D_fus(i)/W) + lambda_i(j))^2);
-        if abs(CT_glauert - CT(i)) < 10^-8
+        if abs(CT_glauert - CT(i)) < 10^-6
             CT_glauert_list = [CT_glauert_list, CT_glauert];
             lambda_i_list = [lambda_i_list, lambda_i(j)];
             break

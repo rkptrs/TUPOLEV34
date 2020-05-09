@@ -3,25 +3,26 @@
 clear
 %INITIAL DATA HELICOPTER
 g=9.81;	
-cla=5.7; %NACA 0012
-volh=.075;	%blade solidity	
+cla=0.115 * 180 / pi;
+volh=0.092;	%blade solidity	
 lok=6;
-cds=1.5;
-mass=2200;
+cds=3.0;
+mass=17650 * 0.45359237;
 rho=1.225;
-vtip=200;
-diam=2*7.32;
-iy=10615;
+diam=2*24 * 0.3048;
+iy=86693.05;
 mast=1;
-omega=vtip/(diam/2);
+omega_r = 221.2848;
+omega = omega_r/diam*2;
+vtip=omega*(diam/2);
 area=pi/4*diam^2;
 tau=.1;		%time constant in dynamiCs inflow!!!
-collect(1)=6*pi/180;
+collect(1)=4.415*pi/180;
 longit(1)=0*pi/180;
 
 %initial values;
 t0=0;
-u0=46;
+u0=0;
 w0=0;
 q0=0;
 pitch0=0*pi/180;
@@ -51,21 +52,22 @@ u1 = 46.3;
 u2 = 36;
 u3 = 46.3;
 u4 = 56.9;
-theta_wish_1 = -17.35;
-theta_wish_2 = -12.8;
+theta_wish_1 = -15 ;
+theta_wish_2 = -0.8;
 theta_wish_3 = -17.35;
 theta_wish_4 = -24;
 % longitgrd(i)= .5*(u1-u(i));%PD in deg
 % longit(i)=longitgrd(i)*pi/180;	%in rad
    if man == 0 
-       longitgrd(i)=.2*(pitch(i)*180/pi-theta_wish_1)+.2*q(i)*180/pi;%PD in deg
+       longitgrd(i)=.2*(pitch(i)*180/pi-theta_wish_1)+0.2*q(i)*180/pi;%PD in deg
        longit(i)=longitgrd(i)*pi/180;	%in rad
-       if t(i)>= 20 & abs(u(i)-u1) <= 0.1
+       if t(i)>= 20 & abs(u(i)-u1) <= 1.5
            man = 1;
        end
    end
+
    if man == 1
-       longitgrd(i)=.28*(pitch(i)*180/pi-theta_wish_2)+.2*q(i)*180/pi;%PD in deg
+       longitgrd(i)=0*(pitch(i)*180/pi-theta_wish_2)+0.2*q(i)*180/pi;%PD in deg
        longit(i)=longitgrd(i)*pi/180;	%in rad
        if abs(u(i)-u2) < 1.5
            man = 2;
@@ -156,13 +158,13 @@ z(i+1)=z(i)+stap*zdot(i);
 t(i+1)=t(i)+stap;
 end
 
-plot(t,u./0.514444),xlabel('t (s)'),ylabel('u(m)'),grid;
+plot(t,u),xlabel('t (s)'),ylabel('u(m)'),grid;
 % plot(t,pitch*180/pi),xlabel('t (s)'),ylabel('pitch(deg)'),grid;
 % plot(t,x),xlabel('t (s)'),ylabel('x(m)'),grid,pause;
 % plot(t,w),xlabel('t (s)'),ylabel('w(m)'),grid,pause;
-% plot(t,q),xlabel('t (s)'),ylabel('q(m)'),grid,pause; 
+% plot(t,q),xlabel('t (s)'),ylabel('q(m)'),grid; 
 % plot(t,labi),xlabel('t (s)'),ylabel('labi(m)'),grid,pause;
 % plot(t,-z),xlabel('t (s)'),ylabel('h(m)'),grid,pause;
-% plot(t(1:800),longit*180/pi),xlabel('t (s)'),ylabel('longit grd'),grid,pause;
+% plot(t(1:4000),longit*180/pi),xlabel('t (s)'),ylabel('longit grd'),grid;
 
 
